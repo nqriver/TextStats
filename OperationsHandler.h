@@ -21,10 +21,11 @@ class OperationsHandler {
     void printOnScreen();
     void printToFile();
     Out specifyStdoutType();
+    void unmarkByLengthOpt();
 public:
     explicit OperationsHandler(CommandLineArgsParser&);
     void tokenizeFile();
-    void setByLength();
+    void markByLengthOpt();
     void printLinesCount();
     void printDigitsCount();
     void printNumbersCount();

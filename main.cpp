@@ -1,9 +1,15 @@
 #include <iostream>
 #include "CommandLineArgsParser.h"
+#include "OperationsHandler.h"
+#include "CallbackManager.h"
 
 int main(int argc, char **argv) {
-    CommandLineArgsParser X(argc, argv);
+    CommandLineArgsParser parser(argc, argv);
     std::vector<Flags> flags;
-    X.validateFlags(flags);
+    parser.validateFlags(flags);
+    OperationsHandler handler{ parser };
+    CallbackManager manager{ handler };
+    manager.callOperations(flags);
+
     return 0;
 }

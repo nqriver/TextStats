@@ -2,7 +2,13 @@
 #include <sstream>
 #include <algorithm>
 
+void TextOperations::resetStream(std::ifstream &infile){
+    infile.clear();
+    infile.seekg(0);
+}
+
 int TextOperations::countLines(std::ifstream &infile) {
+    resetStream(infile);
     std::string line{};
     int counter{0};
     while (std::getline(infile, line)) {
@@ -12,6 +18,7 @@ int TextOperations::countLines(std::ifstream &infile) {
 }
 
 int TextOperations::countDigits(std::ifstream &infile) {
+    resetStream(infile);
     char ch;
     int counter{0};
     while (infile >> ch) {
@@ -21,16 +28,18 @@ int TextOperations::countDigits(std::ifstream &infile) {
 }
 
 int TextOperations::countNumbers(std::ifstream &infile) {
-    std::string line{};
+    resetStream(infile);
+    std::string token{};
     int counter{0};
-    while (std::getline(infile, line)) {
-        std::stringstream ss(line);
+    while (infile >> token) {
+        std::stringstream ss(token);
         if (double val; ss >> val) ++counter;
     }
     return counter;
 }
 
 int TextOperations::countChars(std::ifstream &infile) {
+    resetStream(infile);
     char ch{};
     int counter{0};
     while (infile >> std::noskipws >> ch) {
@@ -40,6 +49,7 @@ int TextOperations::countChars(std::ifstream &infile) {
 }
 
 int TextOperations::countWords(std::ifstream &infile) {
+    resetStream(infile);
     std::string word{};
     int counter{};
     while (infile >> word) {

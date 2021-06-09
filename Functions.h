@@ -5,6 +5,7 @@
 #include <functional>
 
 namespace TextOperations{
+    void resetStream(std::ifstream& infile);
     int countLines(std::ifstream& infile);
     int countDigits(std::ifstream& infile);
     int countNumbers(std::ifstream& infile);

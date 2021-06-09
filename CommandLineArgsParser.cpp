@@ -1,6 +1,5 @@
 #include <algorithm>
 #include <stdexcept>
-#include <fstream>
 #include "CommandLineArgsParser.h"
 #include "InvalidCmdArgumentsException.h"
 #include "Functions.h"
@@ -73,7 +72,7 @@ void CommandLineArgsParser::validateFlags(std::vector<Flags>& validFlags) {
             return;
         }
         else if (*it == "-o" || *it == "--output"){
-            validFlags.push_back(Flags::output);
+//            validFlags.push_back(Flags::output);
             outputFlagSpecified = true;
             ++it;
         }
@@ -161,8 +160,8 @@ void CommandLineArgsParser::getPalindromesInput(std::vector<std::string>& palind
     ///remove non-palindromic words
     palindromes.erase(std::remove_if(
             palindromes.begin(), palindromes.end(),
-            [](const std::string& word) {
-                !TextOperations::isPalindrome(word);
+            [](std::string& word) {
+                return !TextOperations::isPalindrome(word);
             }), palindromes.end());
 
     ///remove equivalent palindromes

@@ -11,6 +11,7 @@ OperationsHandler::OperationsHandler(CommandLineArgsParser &parser) :
 
 }
 
+///splits file content into tokens - words
 void OperationsHandler::tokenizeFile() {
     std::string token{};
     while(sourceFile >> token) {
@@ -18,24 +19,16 @@ void OperationsHandler::tokenizeFile() {
     }
 }
 
-Out OperationsHandler::specifyStdoutType() {
-   return (m_parser.isOutputFlagSpecified() ? Out::file : Out::console );
+void OperationsHandler::markByLengthOpt() {
+    byLength = true;
 }
 
-void OperationsHandler::printPalindromes() {
-    std::vector<std::string> palindromes;
-    m_parser.getPalindromesInput(palindromes);
-    if (palindromes.empty()) return;
+void OperationsHandler::unmarkByLengthOpt(){
+    byLength = false;
+}
 
-    ss_output << "Palindromes:\n";
-    for (const auto& palindrome : palindromes){
-        for (const auto& word : words){
-            if (palindrome == word){
-                ss_output << word << '\n';
-                break;
-            }
-        }
-    }
+Out OperationsHandler::specifyStdoutType() {
+   return (m_parser.isOutputFlagSpecified() ? Out::file : Out::console );
 }
 
 void OperationsHandler::printOutput() {
@@ -61,34 +54,35 @@ void OperationsHandler::printToFile() {
 }
 
 void OperationsHandler::printLinesCount() {
-    ss_output << "Number of lines: " << TextOperations::countLines(sourceFile);
+    ss_output << "[Number of lines] " << TextOperations::countLines(sourceFile) << '\n';
 }
 
 void OperationsHandler::printDigitsCount() {
-    ss_output << "Number of digits: " << TextOperations::countDigits(sourceFile) << '\n';
+    ss_output << "[Number of digits] " << TextOperations::countDigits(sourceFile) << '\n';
 }
 
 void OperationsHandler::printNumbersCount() {
-    ss_output << "Number of numbers: " << TextOperations::countNumbers(sourceFile) << '\n';
+    ss_output << "[Number of numbers] " << TextOperations::countNumbers(sourceFile) << '\n';
 }
 
 void OperationsHandler::printCharsCount() {
-    ss_output << "Number of characters: " << TextOperations::countChars(sourceFile) << '\n';
+    ss_output << "[Number of characters] " << TextOperations::countChars(sourceFile) << '\n';
 }
 
 void OperationsHandler::printWordsCount() {
-    ss_output << "Number of words: " << TextOperations::countWords(sourceFile) << '\n';
+    ss_output << "[Number of words] " << TextOperations::countWords(sourceFile) << '\n';
 }
 
 void OperationsHandler::printSortedWords() {
     if (byLength) {
+        unmarkByLengthOpt();
         TextOperations::sortWords(words, [](const auto& strA, const auto& strB) {
             return strA.size() > strB.size();
         });
-        ss_output << "Words sorted by length:\n";
+        ss_output << "[Words sorted by length]\n";
     } else {
-        TextOperations::sortWords(words, std::greater());
-        ss_output << "Words sorted alphabetically:\n";
+        TextOperations::sortWords(words, std::greater<std::string>());
+        ss_output << "[Words sorted alphabetically]\n";
 
     }
     for_each(words.begin(), words.end(), [&](const auto& word){ ss_output << word << '\n'; });
@@ -96,29 +90,45 @@ void OperationsHandler::printSortedWords() {
 
 void OperationsHandler::printReverseSortedWords() {
     if (byLength) {
+        unmarkByLengthOpt();
         TextOperations::sortWords(words, [](const auto& strA, const auto& strB) {
             return strA.size() < strB.size();
         });
-        ss_output << "Words reverse - sorted by length:\n";
+        ss_output << "[Words reverse - sorted by length]\n";
     } else {
-        TextOperations::sortWords(words, std::less());
-        ss_output << "Words reverse - sorted alphabetically:\n";
+        TextOperations::sortWords(words, std::less<std::string>());
+        ss_output << "[Words reverse - sorted alphabetically]\n";
     }
 
     for_each(words.begin(), words.end(), [&](const auto& word){ ss_output << word << '\n'; });
 }
 
-void OperationsHandler::setByLength() {
-    byLength = true;
+void OperationsHandler::printPalindromes() {
+    std::vector<std::string> palindromes;
+    m_parser.getPalindromesInput(palindromes);
+    if (palindromes.empty()) return;
+
+    ss_output << "[Palindromes]\n";
+    for (const auto& palindrome : palindromes){
+        for (const auto& word : words){
+            if (palindrome == word){
+                ss_output << word << '\n';
+                break;
+            }
+        }
+    }
 }
 
 void OperationsHandler::printAnagrams() {
     std::vector<std::string> inputWords{};
     m_parser.getAnagramsInput(inputWords);
+
+    if (inputWords.empty()) return;
+    ss_output << "[Anagrams]\n";
     for (const auto& inputWord : inputWords){
         for (const auto& fileWord : words){
             if (TextOperations::isAnagram(inputWord, fileWord)){
-                ss_output << fileWord;
+                ss_output << fileWord << '\n';
             }
         }
     }
