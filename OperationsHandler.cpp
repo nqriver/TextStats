@@ -81,7 +81,7 @@ void OperationsHandler::printSortedWords() {
         });
         ss_output << "[Words sorted by length]\n";
     } else {
-        TextOperations::sortWords(words, std::greater<std::string>());
+        TextOperations::sortWords(words, std::less<>());
         ss_output << "[Words sorted alphabetically]\n";
 
     }
@@ -96,7 +96,7 @@ void OperationsHandler::printReverseSortedWords() {
         });
         ss_output << "[Words reverse - sorted by length]\n";
     } else {
-        TextOperations::sortWords(words, std::less<std::string>());
+        TextOperations::sortWords(words, std::greater<>());
         ss_output << "[Words reverse - sorted alphabetically]\n";
     }
 
