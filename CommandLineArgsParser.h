@@ -4,6 +4,7 @@
 
 #include <vector>
 #include <string>
+#include <string_view>
 #include <array>
 
 enum class Flags{
@@ -29,11 +30,11 @@ class CommandLineArgsParser {
     bool outputFlagSpecified;
     std::vector<std::string> arguments;
 
-    const std::string& getPath(const std::string&& flag, const std::string&& alias);
-    bool isLastFlag(std::string&& flag, std::string&& alias);
+    const std::string& getPath(std::string_view flag, std::string_view alias);
+    bool isLastFlag(std::string_view flag, std::string_view alias);
     void validateInputFlag();
     void getArgumentsFromFile();
-    void getMultipleParameters(std::string&& flag, std::string&& alias, std::vector<std::string>& parameters);
+    void getMultipleParameters(std::string_view flag, std::string_view alias, std::vector<std::string>& parameters);
 public:
     CommandLineArgsParser(int &argc, char **argv);
     void validateFlags(std::vector<Flags>& validFlags);

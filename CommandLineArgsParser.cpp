@@ -15,8 +15,8 @@ const std::array<std::pair<std::string, std::string>, 13> CommandLineArgsParser:
     std::make_pair("-rs", "--reverse-sorted"),
     std::make_pair("-l", "--by-length"),
     std::make_pair("-a", "--anagrams"),
-    std::make_pair("-o", "--output"),
     std::make_pair("-p", "--palindromes"),
+    std::make_pair("-o", "--output"),
     std::make_pair("-i", "--input"),
 };
 
@@ -65,16 +65,15 @@ void CommandLineArgsParser::validateFlags(std::vector<Flags>& validFlags) {
         else if (*it == "-l" || *it == "--by-length"){
             validFlags.push_back(Flags::by_length);
         }
+        else if (*it == "-o" || *it == "--output") {
+            outputFlagSpecified = true;
+            ++it;
+        }
         else if (*it == "-a" || *it == "--anagrams"){
             if (!isLastFlag("-a", "--anagrams"))
                 throw InvalidCmdArgumentsException(Errors::invalid_order + Errors::usage);
             validFlags.push_back(Flags::anagrams);
             return;
-        }
-        else if (*it == "-o" || *it == "--output"){
-//            validFlags.push_back(Flags::output);
-            outputFlagSpecified = true;
-            ++it;
         }
         else if (*it == "-p" || *it == "--palindromes"){
             if (!isLastFlag("-p", "--palindromes"))
@@ -89,10 +88,10 @@ void CommandLineArgsParser::validateFlags(std::vector<Flags>& validFlags) {
 }
 
 const std::string& CommandLineArgsParser::getSourcePath() {
-    return getPath("-f", "--file");
+    return getPath(allFlagsData[0].first , allFlagsData[0].second);
 }
 
-const std::string &CommandLineArgsParser::getPath(const std::string&& flag, const std::string&& alias) {
+const std::string &CommandLineArgsParser::getPath(std::string_view flag, std::string_view alias) {
     auto pathIt{ std::find_if(arguments.begin(), arguments.end(),
                            [&](const auto& arg){ return arg == flag || arg == alias; }) };
     if (pathIt == arguments.end() || std::next(pathIt) == arguments.end()) {
@@ -102,15 +101,15 @@ const std::string &CommandLineArgsParser::getPath(const std::string&& flag, cons
 }
 
 const std::string& CommandLineArgsParser::getInputPath() {
-    return getPath("-i", "--input");
+    return getPath(allFlagsData[12].first, allFlagsData[12].second);
 }
 
 const std::string& CommandLineArgsParser::getOutputPath() {
-    return getPath("-o", "--output");
+    return getPath(allFlagsData[11].first, allFlagsData[11].second);
 }
 
 ///checks if there are any other flags after the flag passed as argument
-bool CommandLineArgsParser::isLastFlag(std::string &&flag, std::string &&alias) {
+bool CommandLineArgsParser::isLastFlag(std::string_view flag, std::string_view alias) {
     auto flag_it { std::find_if(arguments.begin(), arguments.end(),
                              [&](const auto& arg){ return (arg == flag || arg == alias); })};
 
@@ -145,7 +144,7 @@ void CommandLineArgsParser::validateInputFlag() {
     }
 }
 
-void CommandLineArgsParser::getMultipleParameters(std::string &&flag, std::string &&alias,
+void CommandLineArgsParser::getMultipleParameters(std::string_view flag, std::string_view alias,
                                                   std::vector<std::string>& parameters) {
 
     auto start{ std::find_if(arguments.begin(), arguments.end(),
@@ -155,7 +154,7 @@ void CommandLineArgsParser::getMultipleParameters(std::string &&flag, std::strin
 }
 
 void CommandLineArgsParser::getPalindromesInput(std::vector<std::string>& palindromes) {
-    getMultipleParameters("-p", "--palindromes", palindromes);
+    getMultipleParameters(allFlagsData[10].first, allFlagsData[10].second, palindromes);
 
     ///remove non-palindromic words
     palindromes.erase(std::remove_if(
@@ -170,7 +169,7 @@ void CommandLineArgsParser::getPalindromesInput(std::vector<std::string>& palind
 }
 
 void CommandLineArgsParser::getAnagramsInput(std::vector<std::string> &anagrams) {
-    getMultipleParameters("-a", "--anagrams", anagrams);
+    getMultipleParameters(allFlagsData[9].first, allFlagsData[9].second, anagrams);
 
     ///in case user entered equivalent anagrams
     auto last = std::unique(anagrams.begin(), anagrams.end());
