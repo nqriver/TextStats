@@ -13,14 +13,14 @@ enum class Out{
 
 
 class OperationsHandler {
-    CommandLineArgsParser m_parser;
+    CommandLineArgsParser& m_parser;
     std::ifstream sourceFile;
     std::stringstream ss_output{};
     std::vector<std::string> words{};
     bool byLength;
-    void printOnScreen();
-    void printToFile();
-    Out specifyStdoutType();
+    void printOnScreen() const;
+    void printToFile() const;
+    Out specifyStdoutType() const;
     void unmarkByLengthOpt();
 public:
     explicit OperationsHandler(CommandLineArgsParser&);
@@ -35,7 +35,7 @@ public:
     void printReverseSortedWords();
     void printAnagrams();
     void printPalindromes();
-    void printOutput();
+    void printOutput() const;
 };
 
 

@@ -27,11 +27,11 @@ void OperationsHandler::unmarkByLengthOpt(){
     byLength = false;
 }
 
-Out OperationsHandler::specifyStdoutType() {
+Out OperationsHandler::specifyStdoutType() const {
    return (m_parser.isOutputFlagSpecified() ? Out::file : Out::console );
 }
 
-void OperationsHandler::printOutput() {
+void OperationsHandler::printOutput() const {
     Out destination = specifyStdoutType();
     switch (destination){
         case Out::console:
@@ -43,11 +43,11 @@ void OperationsHandler::printOutput() {
     }
 }
 
-void OperationsHandler::printOnScreen() {
+void OperationsHandler::printOnScreen() const {
     std::cout << ss_output.str();
 }
 
-void OperationsHandler::printToFile() {
+void OperationsHandler::printToFile() const {
     std::string name { m_parser.getOutputPath() };
     std::ofstream outFile{ name };
     outFile << ss_output.rdbuf();
