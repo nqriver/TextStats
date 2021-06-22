@@ -22,7 +22,7 @@ const std::array<std::pair<std::string, std::string>, 13> CommandLineArgsParser:
 
 CommandLineArgsParser::CommandLineArgsParser(int &argc, char **argv) {
     for (auto i { 1 }; i < argc; ++i) {
-        arguments.push_back( std::string(argv[i]) );
+        arguments.emplace_back(argv[i] );
     }
     fileFlagSpecified = *arguments.begin() == "-f" || *arguments.begin() == "--file";
     inputFlagSpecified = *arguments.begin() == "-i" || *arguments.begin() == "--input";
@@ -87,11 +87,7 @@ void CommandLineArgsParser::validateFlags(std::vector<Flags>& validFlags) {
     }
 }
 
-const std::string& CommandLineArgsParser::getSourcePath() {
-    return getPath(allFlagsData[0].first , allFlagsData[0].second);
-}
-
-const std::string &CommandLineArgsParser::getPath(std::string_view flag, std::string_view alias) {
+const std::string &CommandLineArgsParser::getPath(std::string_view flag, std::string_view alias) const {
     auto pathIt{ std::find_if(arguments.begin(), arguments.end(),
                            [&](const auto& arg){ return arg == flag || arg == alias; }) };
     if (pathIt == arguments.end() || std::next(pathIt) == arguments.end()) {
@@ -100,27 +96,29 @@ const std::string &CommandLineArgsParser::getPath(std::string_view flag, std::st
     return *std::next(pathIt);
 }
 
-const std::string& CommandLineArgsParser::getInputPath() {
+const std::string& CommandLineArgsParser::getSourcePath() const {
+    return getPath(allFlagsData[0].first , allFlagsData[0].second);
+}
+
+const std::string& CommandLineArgsParser::getInputPath() const {
     return getPath(allFlagsData[12].first, allFlagsData[12].second);
 }
 
-const std::string& CommandLineArgsParser::getOutputPath() {
+const std::string& CommandLineArgsParser::getOutputPath() const {
     return getPath(allFlagsData[11].first, allFlagsData[11].second);
 }
 
 ///checks if there are any other flags after the flag passed as argument
-bool CommandLineArgsParser::isLastFlag(std::string_view flag, std::string_view alias) {
+bool CommandLineArgsParser::isLastFlag(std::string_view flag, std::string_view alias) const {
     auto flag_it { std::find_if(arguments.begin(), arguments.end(),
                              [&](const auto& arg){ return (arg == flag || arg == alias); })};
 
     auto any_flag = std::find_if(std::next(flag_it), arguments.end(),
                  [&](const auto& arg) {
-        for (const auto& flag : allFlagsData){
-            if ( arg == flag.first || arg == flag.second)
-                return true;
-        }
-        return false;
+        return std::any_of(allFlagsData.begin(), allFlagsData.end(),
+                           [&](const auto& flag) { return flag.first == arg || flag.second == arg; });
     });
+
     return any_flag == arguments.end();
 }
 

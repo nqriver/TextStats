@@ -19,8 +19,6 @@ enum class Flags{
     by_length,
     anagrams,
     palindromes,
-    output,
-    input
 };
 
 class CommandLineArgsParser {
@@ -30,8 +28,8 @@ class CommandLineArgsParser {
     bool outputFlagSpecified;
     std::vector<std::string> arguments;
 
-    const std::string& getPath(std::string_view flag, std::string_view alias);
-    bool isLastFlag(std::string_view flag, std::string_view alias);
+    const std::string& getPath(std::string_view flag, std::string_view alias) const;
+    bool isLastFlag(std::string_view flag, std::string_view alias) const;
     void validateInputFlag();
     void getArgumentsFromFile();
     void getMultipleParameters(std::string_view flag, std::string_view alias, std::vector<std::string>& parameters);
@@ -40,9 +38,9 @@ public:
     void validateFlags(std::vector<Flags>& validFlags);
     void getPalindromesInput(std::vector<std::string>& palindromes);
     void getAnagramsInput(std::vector<std::string>& anagrams);
-    const std::string& getSourcePath();
-    const std::string& getOutputPath();
-    const std::string& getInputPath();
+    const std::string& getSourcePath() const;
+    const std::string& getOutputPath() const;
+    const std::string& getInputPath() const;
     bool isOutputFlagSpecified() const;
 };
 
