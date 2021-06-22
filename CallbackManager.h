@@ -8,10 +8,10 @@
 
 class CallbackManager {
 
-    std::map<Flags, std::function<void()>> methods;
-    OperationsHandler& m_operations;
+    std::map<Flags, std::function<void()>> operations_caller;
+    OperationsHandler& m_handler;
 public:
-    CallbackManager(OperationsHandler& operations);
+    explicit CallbackManager(OperationsHandler& handler);
     void callOperations(const std::vector<Flags>& validFlags);
 
 
