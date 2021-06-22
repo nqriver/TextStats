@@ -17,10 +17,13 @@ namespace Errors {
 
 class InvalidCmdArgumentsException : public std::runtime_error {
 public:
-    explicit InvalidCmdArgumentsException(const std::string& errorMsg) : std::runtime_error(errorMsg.c_str())
+    explicit InvalidCmdArgumentsException(const std::string& errorMsg) :
+            std::runtime_error(errorMsg.c_str())
     {
+
     }
-    explicit InvalidCmdArgumentsException(std::string&& errorMsg) : std::runtime_error(errorMsg.c_str())
+    explicit InvalidCmdArgumentsException(std::string&& errorMsg) :
+            std::runtime_error(errorMsg.c_str())
     {
     }
 };
