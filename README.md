@@ -34,6 +34,69 @@ The options above may be used in any combination with a few constraints:
 * -o flag should be followed by file path
 * -a and -p flags should be specified at the end, followed by any number of words (including 0)
 
+## Usage example
+Considering text file ```first_match.txt``` with the following content:
+
+```
+The 1872 football match between the national teams of Scotland and England is the sport's first-ever international.
+It took place on 30 November 1872 in Glasgow. 
+The match was watched by 4,000 spectators and finished as a 0–0 draw.
+ ```
+
+an example program run with arguments specified as follows:
+```
+textstats.exe -f first_match.txt -d -dd -w -l --sorted -o result.txt --anagrams tchma
+```
+saves the following results to file ```result.txt``` :
+```
+[Number of digits] 16
+[Number of numbers] 5
+[Number of words] 40
+[Words sorted by length]
+international.
+first-ever
+spectators
+November
+football
+Partick,
+Glasgow.
+national
+finished
+Scotland
+England
+sport's
+watched
+between
+4,000
+teams
+match
+place
+match
+1872
+1872
+draw
+took
+0–0
+The
+the
+The
+was
+the
+and
+and
+by
+as
+of
+is
+30
+It
+on
+in
+a
+[Anagrams]
+match
+match
+```
 ## Technologies
 * C++
 
